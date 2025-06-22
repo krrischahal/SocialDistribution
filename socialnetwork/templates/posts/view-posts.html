@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'socialnetwork/css/view-posts.css' %}" />
+<main class="feed-container">
+    <section class="posts-feed">
+        {% for post in posts %}
+        <article class="post-item {% if post.is_github_activity %}github-post{% endif %}">
+            <section class="author-info-bar">
+                <div class="profile-container">
+                    {% if post.author.profile_image %}
+                    <img src="{{ post.author.profile_image }}" alt="{{ post.author.display_name }}" />
+                    {% endif %}
+                </div>
+                <div class="author-details">
+                    <a href="{% url 'profile' author_id=post.author.uid %}" class="author-display-name">{{ post.author.display_name }}</a>
+                    <p class="post-datetime">{{ post.published_at }}</p>
+                </div>
+            </section>
+            <section class="post-body">
+                {% if post.is_github_activity %}
+                <div class="github-activity-box">
+                    <p><strong>{{ post.title }}</strong></p>
+                    <p>{{ post.content }}</p>
+                </div>
+                {% elif post.content_type == 'application/base64' or post.content_type == 'image/png;base64' or post.content_type == 'image/jpeg;base64' %}
+                    <h2 class="post-title">{{ post.title }}</h2>
+                    <img src="{{ post.content }}" alt="{{ post.title }}" />
+                {% elif post.content_type == 'text/markdown' %}
+                    <h2>{{ post.title }}</h2>
+                    <div class="markdown_post">{{ post.content }}</div>
+                {% else %}
+                    <h2>{{ post.title }}</h2>
+                    <p>{{ post.content }}</p>
+                {% endif %}
+            </section>
+            {% if not post.is_github_activity %}
+            <div class="interaction-bar">
+                <div class="like-section">
+                    {% if user.is_authenticated %}
+                        <button onclick="likePost('{{ post.uid }}', '{{ post.author.uid }}')" class="interaction-bar-item">Like</button>
+                    {% else %}
+                        <p>Please log in to like this post.</p>
+                    {% endif %}
+                    <span id="like-count-{{ post.uid }}">{{ post.likes_count }} Likes</span>
+                </div>
+                <span>{{ post.comments_count }} Comments</span>
+                <a href="{% url 'post_page' author_uid=post.author.uid post_uid=post.uid %}">View Post</a>
+            </div>
+            {% else %}
+            <div class="interaction-bar">
+                <a href="{{ post.author.github }}" target="_blank" rel="noopener noreferrer" class="github-link">View GitHub Activity</a>
+            </div>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </section>
+</main>
+<script>
+    function likePost(postId, authorId) {
+        fetch(`/api/authors/${authorId}/posts/${postId}/like/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ type: 'like' })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.message || `HTTP error! status: ${response.status}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            const likeCountSpan = document.getElementById(`like-count-${postId}`);
+            if (data.likes_count) {
+                likeCountSpan.innerText = `${data.likes_count} Likes`;
+            } else {
+                console.error("Unexpected response:", data);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+            alert(error.message);
+        });
+    }
+</script>
+{% endblock %}

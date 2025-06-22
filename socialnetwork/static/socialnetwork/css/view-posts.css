@@ -1,0 +1,194 @@
+.like-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.like-button:hover {
+    transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+.like-button i {
+    font-size: 1.5em;
+    transition: color 0.2s, transform 0.2s;
+}
+
+/* Liked state: red heart */
+.like-button i.liked {
+    color: #e74c3c;
+}
+
+/* Not liked state: white heart with grey outline */
+.like-button i.not-liked {
+    color: #ccc;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    padding: 2px;
+}
+
+.like-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.like-section button {
+    background: none;
+    border: none;
+    color: #e74c3c; /* Red heart like Instagram */
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.like-section button:hover {
+    color: #ff6b6b; /* Brighter red on hover */
+}
+
+/* Hover effect */
+.like-button:hover i {
+    transform: scale(1.1);
+}
+
+.posts-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.post-item {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* GitHub Activity Styling */
+.github-post {
+    background-color: #0d1117; /* GitHub dark background */
+    border: 1px solid #30363d; /* Border color matching GitHub activity boxes */
+    color: #c9d1d9; /* Light text color */
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.github-activity-box {
+    background-color: #161b22; /* Slightly lighter dark shade */
+    border-left: 4px solid #238636; /* GitHub green accent */
+    padding: 10px 15px;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+.github-activity-box p {
+    color: #8b949e; /* Subtle gray text */
+    margin: 5px 0;
+}
+
+.github-link {
+    color: #58a6ff; /* GitHub blue link */
+    text-decoration: none;
+}
+
+.github-link:hover {
+    text-decoration: underline;
+    color: #1f6feb; /* Darker blue on hover */
+}
+
+/* Author Info Bar */
+.author-info-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.profile-container img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+
+.author-details {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.author-display-name {
+    font-weight: bold;
+    color: #001a4d; /* Darker royal blue for the author's name */
+    text-decoration: none;
+}
+
+.author-display-name:hover {
+    text-decoration: underline;
+}
+
+.post-datetime {
+    font-size: 0.9em;
+    color: gray;
+}
+
+/*.post-title {
+    font-weight: normal;
+}*/
+
+/* Post Body */
+.post-body img {
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.post-body p {
+    font-size: 1em;
+    color: #333; /* Dark text for descriptions */
+}
+
+/* Interaction Bar */
+.interaction-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.comment-count {
+    color: gray;
+}
+
+a {
+    color: #001a4d; /* Dark royal blue for links */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.feed-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Old GitHub Activity Styling */
+.github-activity {
+    background-color: #f1f1f1;
+    border-left: 4px solid #0366d6; /* GitHub blue */
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.github-activity p {
+    margin: 0;
+    color: #333;
+}

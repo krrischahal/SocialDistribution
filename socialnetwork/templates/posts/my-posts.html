@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'socialnetwork/css/my-post.css' %}" />
+
+<!-- Page Title -->
+<h2>Edit Your Posts</h2>
+
+<ul>
+  {% for post in posts %}
+    {% if post.visibility != 'DELETED' %}
+      <li>
+        <h3><a href="{% url 'post_page' author_uid=author.uid post_uid=post.uid %}">{{ post.title }}</a></h3>
+        {% if post.content_type == "text/markdown" %}
+          <div class="markdown_post" style="display: block">{{ post.content }}</div>
+        {% elif post.content_type == "text/plain" %}
+          <div class="plaintext_post" style="display: block">{{ post.content }}</div>
+        {% else %}
+          <div class="image_post" style="display: block">
+            <img src="{{ post.content }}" alt="{{ post.title }}" class="post-image">
+          </div>
+        {% endif %}
+        <form method="GET" action="{% url 'edit_post' author_uid=author.uid post_uid=post.uid %}">
+          <input type="submit" value="Edit" />
+        </form>
+        <form method="POST" action="{% url 'delete_post' author_uid=author.uid post_uid=post.uid %}">
+          {% csrf_token %}
+          <input type="submit" value="Delete" />
+        </form>
+      </li>
+    {% endif %}
+  {% endfor %}
+</ul>
+
+{% endblock %}

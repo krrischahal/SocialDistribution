@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block content %}
+  {% load static %}
+  <link rel="stylesheet" href="{% static './socialnetwork/css/followers.css' %}">
+
+  <h2>Pending Follow Requests</h2>
+  {% if pending_requests %}
+    <ul class = "follow-list">
+      {% for request in pending_requests %}
+        <li>
+          {% if request.follower.profile_image %}
+            <img src="{{ request.follower.profile_image }}" alt="{{ request.follower.display_name }}" width="50" height="50" />
+          {% else %}
+            <img src="{% static 'socialnetwork/images/default_profile.png' %}" alt="Default Profile" width="50" height="50" />
+          {% endif %}
+          <strong><a href="{{ request.follower.page }}">{{ request.follower.display_name }}<a/></strong>
+          <!--Accept and Reject Buttons !-->
+          <button class="accept-btn" data-follow-id="{{ request.id }}">Accept</button>
+          <button class="reject-btn" data-follow-id="{{ request.id }}">Reject</button>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>You have no pending follow requests.</p>
+  {% endif %} 
+
+
+  <h2>Follow Other Authors</h2>
+  {% if authors_with_status %}
+    <ul class = "follow-list">
+      {% for item in authors_with_status %}
+      <li>
+          <a href="{{ item.author.page }}">{{ item.author.display_name }}</a>
+          <button
+            class="{% if item.is_following %}unfollow-btn{% elif item.has_requested %}requested-btn{% else %}follow-btn{% endif %}"
+            data-author-id="{{ item.author.id }}"
+            data-author-host="{{ item.author.host }}"
+            {% if item.author.host != request.get_host %}
+                data-author-username="{{ item.credentials.username }}"
+                data-author-password="{{ item.credentials.password }}"
+            {% endif %}
+            data-author-display-name="{{ item.author.display_name }}"
+            data-author-github="{{ item.author.github }}"
+            data-author-profile-image="{{ item.author.profile_image }}"
+        >
+            {% if item.is_following %}Unfollow{% elif item.has_requested %}Requested{% else %}Follow{% endif %}
+        </button>
+      </li>
+      {% endfor %}
+      
+  
+    </ul>
+  {% else %}
+    <p>No authors available to follow.</p>
+  {% endif %}
+
+  <!-- Hidden form to set CSRF token -->
+  <form method="post" style="display: none;">
+    {% csrf_token %}
+  </form>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Define user variables for JavaScript -->
+<script>
+  const userId = '{{ user.id|escapejs }}';
+  const userDisplayName = '{{ user.display_name|escapejs }}';
+  const userHost = '{{ user.host|escapejs }}';
+  const userUrl = '{{ user.page|escapejs }}';
+  const userGithub = '{{ user.github|escapejs }}';
+  const userProfileImage = '{% if user.profile_image %}{{ user.profile_image|escapejs }}{% else %}{% endif %}';
+</script>
+
+<script src="{% static 'socialnetwork/js/follow_requests.js' %}"></script>
+{% endblock %}

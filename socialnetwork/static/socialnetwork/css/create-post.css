@@ -1,0 +1,94 @@
+/* General container styles */
+
+.form-container {
+    justify-content: center;
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Input fields */
+.text-input {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.text-input:focus {
+    border-color: #0066cc;
+    box-shadow: 0 0 8px rgba(0, 102, 204, 0.2);
+}
+
+/* File input */
+#image-upload-field {
+    display: none;
+}
+
+/* Select input container */
+.select-input-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.select-input {
+    width: calc(50% - 5px);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #ffffff;
+    font-size: 1rem;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.select-input:focus {
+    border-color: #0066cc;
+}
+
+/* Submit button */
+.submit-button {
+    background-color: #0066cc;
+    color: #ffffff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+    outline: none;
+}
+
+.submit-button:hover {
+    background-color: #005bb5;
+    transform: translateY(-2px);
+}
+
+.submit-button:active {
+    transform: translateY(0);
+}
+
+/* Form error message */
+h2 {
+    color: #cc0000;
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+textarea.text-input {
+    width: 100%;
+    height: 10em;
+    resize: vertical;
+}

@@ -1,0 +1,263 @@
+/* General page layout */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f2f5;
+}
+
+.flex-content {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.post-page-container {
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    width: 80%;
+    max-width: 900px;
+    padding: 25px;
+    margin: 20px 0;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Author section */
+.author-info-bar {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    animation: slideIn 0.5s ease-in-out;
+}
+
+.profile-container {
+    margin-right: 15px;
+}
+
+.profile-image {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.no-profile-image {
+    background-color: #ddd;
+    display: inline-block;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+}
+
+.author-display-name {
+    color: #333;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+.author-display-name:hover {
+    color: #0066cc;
+}
+
+/* Post body */
+.post-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 15px;
+    animation: slideIn 0.7s ease-in-out;
+}
+
+.post-image {
+    max-width: 100%;
+    border-radius: 8px;
+    margin: 15px 0;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.post-image:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.markdown_post {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #555;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    white-space: pre-wrap;
+    animation: fadeIn 1s ease-in-out;
+}
+
+.post-content {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #333;
+    animation: slideIn 0.7s ease-in-out;
+}
+
+.post-datetime {
+    font-size: 0.85rem;
+    color: #777;
+    margin-top: 10px;
+    animation: fadeIn 1.2s ease-in-out;
+}
+
+/* Interaction bar */
+.interaction-bar {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.interaction-bar-item {
+    background-color: #0066cc;
+    color: #ffffff;
+    padding: 8px 15px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.interaction-bar-item:hover {
+    background-color: #005bb5;
+    transform: scale(1.05);
+}
+
+.form-wrapper {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start;
+}
+
+form {
+    margin: 0;
+}
+
+/* Comments section */
+.comments-section {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 15px;
+    margin-top: 20px;
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.comments-section h3 {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+#comments-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#comments-list li {
+    background-color: #f1f1f1;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s;
+}
+
+#comments-list li:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#comments-list li p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+#comments-list li button {
+    background-color: #00aaff;
+    color: #ffffff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 15px;
+    cursor: pointer;
+    margin-top: 5px;
+    font-size: 0.8rem;
+    width: 8%;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#comments-list li button:hover {
+    background-color: #008ecf;
+    transform: scale(1.05);
+}
+
+#comment-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+#comment-form textarea {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    resize: vertical;
+    font-size: 1rem;
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s;
+}
+
+#comment-form textarea:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(0, 102, 204, 0.3);
+}
+
+#comment-form button {
+    align-self: flex-start;
+    background-color: #0066cc;
+    color: #ffffff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#comment-form button:hover {
+    background-color: #005bb5;
+    transform: scale(1.05);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

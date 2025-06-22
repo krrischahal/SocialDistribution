@@ -1,0 +1,153 @@
+/* General container and spacing */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f2f5;
+  margin: 0;
+  line-height: 1.6;
+}
+
+h2 {
+  color: #1a202c;
+  font-size: 28px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* List styling for both sections */
+ul.follow-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0; 
+  display: flex;
+  flex-wrap: wrap; /* This ensures items can wrap onto new rows */
+  gap: 1rem; /* Adds spacing between items */
+  justify-content: center; /* Centers the items */
+}
+
+ul.follow-list li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 15px;
+  margin: 0;
+  width: calc(28% - 1rem); /* 3 items per row */
+  box-sizing: border-box;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+  animation: slideIn 0.5s ease-in-out;
+}
+
+ul.follow-list li img {
+  margin-bottom: 10px;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+ul.follow-list li img:hover {
+  transform: scale(1.15);
+}
+
+ul.follow-list li a {
+  color: #2c3e50;
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: bold;
+  transition: color 0.3s, text-shadow 0.3s;
+  white-space: nowrap;           /* Prevent text from wrapping */
+  overflow: hidden;              /* Hide text that overflows */
+  text-overflow: ellipsis;       /* Add an ellipsis (...) for overflowed text */
+  width: 100%;                   /* Ensure the width is 100% of the parent container */
+  text-align: center;            /* Optional: Align the text to the center */
+}
+
+ul.follow-list li a:hover {
+  color: #3498db;
+}
+
+button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 10px;
+  transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+.accept-btn {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.accept-btn:hover {
+  background-color: #218838;
+}
+
+.reject-btn {
+  background-color: #dc3545;
+  color: #fff;
+  margin-left: 10px;
+}
+
+.reject-btn:hover {
+  background-color: #c82333;
+}
+
+.follow-btn {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.follow-btn:hover {
+  background-color: #0056b3;
+}
+
+.requested-btn {
+  background-color: #ff8c00;
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.unfollow-btn {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.unfollow-btn:hover {
+  background-color: #c82333;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  ul.follow-list li {
+    width: calc(50% - 20px); /* 2 items per row on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  ul.follow-list li {
+    width: 100%; /* 1 item per row on very small screens */
+  }
+}
+
+/* Keyframes for animations */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

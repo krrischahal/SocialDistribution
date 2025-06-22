@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block title %} {{ author.display_name }}'s Profile {% endblock %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'socialnetwork/css/profile.css' %}" />
+
+<div class="profile-container">
+  <!-- Pencil Icon Button for Editing Profile -->
+  {% if user == author %}
+    <button id="edit-profile-btn" class="edit-profile-btn">
+      <i class="fas fa-pencil-alt"></i>
+    </button>
+  {% endif %}
+
+  <div class="profile-header">
+    {% if author.profile_image %}
+      <img src="{{ author.profile_image }}" alt="{{ author.display_name }}'s profile image" class="profile-image" />
+    {% else %}
+      <div class="profile-image no-profile-image">No Profile Image Available</div>
+    {% endif %}
+
+    <div class="profile-details">
+      <h1>{{ author.display_name }}</h1>
+      {% if user != author %}
+      <button id="follow-btn" class="{% if is_following %}unfollow-btn{% elif has_requested %}requested-btn{% else %}follow-btn{% endif %}"
+        data-author-id="{{ author.uid }}"
+        data-author-display-name="{{ author.display_name }}"
+        data-author-github="{{ author.github }}"
+        data-author-profile-image="{% if author.profile_image %}{{ author.profile_image }}{% else %}{% endif %}"
+      >
+        {% if is_following %}Unfollow{% elif has_requested %}Requested{% else %}Follow{% endif %}
+      </button>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if author.github %}
+    <div class="github-link">
+      <a href="{{ author.github }}" target="_blank">
+        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub logo" />
+        <span>{{ author.github|cut:"https://github.com/" }}</span>
+      </a>
+    </div>
+  {% endif %}
+
+  <!-- The Modal for Editing Profile -->
+  <div id="profile-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <form id="edit-profile" method="POST" enctype="multipart/form-data">
+        {% csrf_token %} {{ form.as_p }}
+        <button type="submit">Update Profile</button>
+      </form>
+    </div>
+  </div>
+  <!-- Display public posts -->
+  <div class="public-posts">
+    <h2>Recent Activity</h2>
+    {% if combined_posts %}
+    <ul class="post-list">
+      {% for post in combined_posts %}
+      <li class="post-item">
+        <!-- Check if this is a GitHub activity or a normal post -->
+        {% if post.is_github_activity %}
+        <!-- Display GitHub activity styled as a public post -->
+        <div class="github-activity-item">
+          <div class="activity-content">
+            <!-- Display Profile Image -->
+            <img
+              src="{{ post.activity_avatar }}"
+              alt="Profile Image"
+              class="activity-avatar"
+            />
+            <div class="activity-details">
+              <h3>{{ post.title }}</h3>
+              <p>{{ post.content }}</p>
+              <span class="activity-timestamp">{{ post.published_at }}</span>
+            </div>
+          </div>
+        </div>
+        {% elif post.type == "repost" %}
+        <!-- Display repost -->
+        <a class="post-reposted" href="{{ post.post.author.page }}">Repost from {{ post.post.author.displayName }}</a>
+        <a href="{{ post.post.page }}">
+          <h3>{{ post.post.title }}</h3>
+        </a>
+        <p>{{ post.post.description }}</p>
+        <span class="post-timestamp">{{ post.published_at }}</span>
+        {% else %}
+        <!-- Display normal public post -->
+        <a href="{{ post.page }}">
+          <h3>{{ post.title }}</h3>
+        </a>
+        <p>{{ post.description }}</p>
+        <span class="post-timestamp">{{ post.published_at }}</span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>This user has no public posts or activities.</p>
+    {% endif %}
+  </div>
+</div>
+
+{% if user.is_authenticated and user.uid == author.uid %}
+  <div class="profile-container">
+    <h4>
+      <a href="{% url 'my_posts' author_uid=user.uid %}" style="color: inherit;">My Posts</a>
+    <h4>
+  </div>
+{% endif %}
+
+<!-- Link the JavaScript for modal functionality -->
+<script>
+  var modal = document.getElementById("profile-modal");
+  var btn = document.getElementById("edit-profile-btn");
+  var span = document.getElementsByClassName("close")[0];
+
+  btn.onclick = function () {
+    modal.style.display = "block";
+  };
+
+  span.onclick = function () {
+    modal.style.display = "none";
+  };
+
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      modal.style.display = "none";
+    }
+  };
+</script>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+/>
+<script>
+  const userId = '{{ user.id|escapejs }}';
+  const userDisplayName = '{{ user.display_name|escapejs }}';
+  const userHost = '{{ user.host }}';
+  const userUrl = '{{ user.page }}';
+  const userGithub = '{{ user.github|escapejs }}';
+  const userProfileImage = '{% if user.profile_image %}{{ user.profile_image }}{% else %}{% endif %}';
+</script>
+<script src="{% static 'socialnetwork/js/profile.js' %}"></script>
+{% endblock %}

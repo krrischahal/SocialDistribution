@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'socialnetwork/css/create-post.css' %}" />
+
+<h2>{{errors}}</h2>
+
+<nav class="form-page-container">
+  <nav class="form-container">
+    <form action="{% url 'new_post' author_uid=author_uid %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <input
+        class="text-input"
+        type="text"
+        name="title"
+        id="title-field"
+        placeholder="Title"
+        maxlength="255"
+        required
+      /><br />
+      <input
+        class="text-input"
+        type="text"
+        name="description"
+        id="description-field"
+        placeholder="Description"
+      /><br />
+      <textarea
+        class="text-input"
+        name="content"
+        id="text-content-field"
+        placeholder="Write your post..."
+        required
+      ></textarea
+      ><br />
+      <!-- Hidden content field for image base64 data -->
+      <input type="hidden" name="image_content" id="image-content-field">
+
+      <!-- Image upload field -->
+      <input type="file" name="image" id="image-upload-field" style="display:none;"><br />
+
+			<div class="select-input-container">
+				<select class="select-input" name="contentType" id="content-type-select">
+					<option value="" disabled>--Content type--</option>
+					<option value="text/plain" selected>Plaintext</option>
+					<option value="text/markdown">CommonMark</option>
+					<option value="application/base64">Image</option>
+				</select>
+				<select class="select-input" name="visibility" id="visibility-select">
+					<option value="" disabled>--Visibility--</option>
+					<option value="PUBLIC" selected>Public</option>
+					<option value="UNLISTED">Unlisted</option>
+					<option value="FRIENDS">Friends only</option>
+				</select><br>
+			</div>
+			<input class="submit-button" type="submit" value="Create post">
+		</form>
+	</nav>
+</nav>
+
+
+<script>
+document.getElementById('content-type-select').addEventListener('change', function() {
+    var selected = this.value;
+    var textField = document.getElementById('text-content-field');
+    var imageField = document.getElementById('image-upload-field');
+    var imageContentField = document.getElementById('image-content-field');
+
+    if (selected === 'application/base64' || selected.startsWith('image/')) {
+        textField.style.display = 'none';
+        textField.required = false;
+        textField.value = ''; // Clear text content
+        imageField.style.display = 'block';
+        imageField.required = true;
+    } else {
+        textField.style.display = 'block';
+        textField.required = true;
+        imageField.style.display = 'none';
+        imageField.required = false;
+        imageField.value = ''; // Clear image field
+        imageContentField.value = ''; // Clear image content
+    }
+});
+document.getElementById('image-upload-field').addEventListener('change', function() {
+    var file = this.files[0];
+    var imageContentField = document.getElementById('image-content-field');
+
+    if (file) {
+        var reader = new FileReader();
+        reader.onload = function(event) {
+            // Base64 encode the image
+            // var base64Data = event.target.result.split(',')[1];
+            // imageContentField.value = base64Data;
+            imageContentField.value = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        imageContentField.value = '';
+    }
+});
+  </script>
+{% endblock %}

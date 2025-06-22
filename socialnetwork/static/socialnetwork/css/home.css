@@ -1,0 +1,90 @@
+/* Page container */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7fc;
+}
+
+/* Page title */
+h1 {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+/* List of posts */
+ul {
+    list-style: none;
+    padding: 10px;
+}
+
+li {
+    background-color: #ffffff;
+    margin: 15px 0;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    padding: 10px;
+}
+
+/* Hover effect */
+li:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* Base styles for post links */
+a {
+    display: inline-block;
+    text-decoration: none;
+    padding: 20px;
+    color: #0066cc;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: color 0.3s, transform 0.3s, box-shadow 0.3s;
+    border-radius: 8px;
+    position: relative;
+}
+
+/* Animation for hover effect */
+a:hover {
+    color: #004a99;
+    transform: translateY(-4px);
+    box-shadow: 0 4px 15px rgba(0, 102, 204, 0.2);
+}
+
+/* Underline animation */
+a::after {
+    content: '';
+    display: block;
+    height: 3px;
+    background-color: #0066cc;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    transition: width 0.3s, left 0.3s;
+}
+
+a:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+p {
+    font-size: 1.2rem;
+    color: #2a4365;
+}
+
+/* Repost styling */
+.post-reposted {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.post-reposted:hover {
+    text-decoration: underline;
+}

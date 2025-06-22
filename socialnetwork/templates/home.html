@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+<link
+  rel="stylesheet"
+  type="text/css"
+  href="{% static 'socialnetwork/css/home.css' %}"
+/>
+
+<h1>Welcome to My Social Network</h1>
+<p>This is the home page.</p>
+
+<a class="anchor" href="{% url 'view_posts' %}">Public Posts</a>
+<br>
+
+{% if user.is_authenticated %}
+<a href="{% url 'view_stream' %}">Stream</a>
+{% endif %}
+
+{% endblock %}

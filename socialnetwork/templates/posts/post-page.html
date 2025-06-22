@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'socialnetwork/css/post-page.css' %}" />
+
+<main class="flex-content">
+    <article class="post-page-container">
+        <section class="author-info-bar">
+            <div class="profile-container">
+                {% if author.profile_image %}
+                    <img src="{{ author.profile_image }}" alt="{{ author.display_name }}'s profile image" class="profile-image" />
+                {% else %}
+                    <div class="profile-image no-profile-image"></div>
+                {% endif %}
+            </div>
+            <a class="author-display-name" href="{% url 'profile' author_id=post.author.uid %}">{{ post.author.display_name }}</a>
+        </section>
+
+        <section class="post-body">
+            <h1 class="post-title">{{ post.title }}</h1>
+            {% if post.content_type == 'application/base64' or post.content_type == 'image/png;base64' or post.content_type == 'image/jpeg;base64' %}
+                    <!-- Use base64 data from content field -->
+                    <img src="{{ post.content }}" alt="{{ post.title }}" class="post-image"> 
+                    {% elif post.content_type == "text/markdown" %}
+                <div class="markdown_post">{{ post.content|safe }}</div>
+            {% else %}
+                <p class="post-content">{{ post.content }}</p>
+            {% endif %}
+            <p class="post-datetime">{{ post.published_at }}</p>
+
+            <div class="interaction-bar">
+	            <!-- Like button and count -->
+	            <div class="like-section">
+	                {% if user.is_authenticated %}
+	                    <button class="interaction-bar-item" onclick="likePost('{{ post.uid }}')">Like</button>
+	                {% else %}
+	                    <p>Please log in to like this post.</p>
+	                {% endif %}
+	                <span class="interaction-bar-item" id="like-count">{{ post.likes.count }} Likes</span>
+	            </div>
+
+				{% if user.is_authenticated and user.uid == author.uid %}
+				<div class="form-wrapper">
+					<form method="GET" action="{% url 'edit_post' author_uid=author.uid post_uid=post.uid %}">
+						<input class="interaction-bar-item" type="submit" value="Edit" />
+					</form>
+					
+					<form method="POST" action="{% url 'delete_post' author_uid=author.uid post_uid=post.uid %}">
+						{% csrf_token %}
+						<input class="interaction-bar-item" type="submit" value="Delete" />
+					</form>
+				</div>
+				{% endif %}
+				
+				<div class="form-wrapper">
+					<button class="interaction-bar-item" onclick="share('{{ post.page }}')">Share</button>
+	            	<button class="interaction-bar-item" onclick="repost('{{ post.id }}')">Repost</button>
+				</div>
+			</div>
+
+            <!-- Comment form -->
+            {% if user.is_authenticated %}
+            <form id="comment-form">
+                {% csrf_token %}
+                <textarea name="comment" id="comment-text" placeholder="Add a comment..." required></textarea>
+                <button type="submit">Comment</button>
+            </form>
+            {% else %}
+            <p>Please log in to add a comment.</p>
+            {% endif %}
+
+            <!-- Display comments and likes on comments -->
+            <section class="comments-section">
+                <h3>Comments ({{ post.comments.count }})</h3>
+                <ul id="comments-list">
+                    {% for comment in post.comments.src %}
+                    <li id="comment-{{ comment.uid }}">
+                        <p>{{ comment.author.display_name }}: {{ comment.comment }}</p>
+                        <p>{{ comment.published }}</p>
+                        {% if user.is_authenticated %}
+                        <button onclick="likeComment('{{ comment.uid }}')">Like</button>
+                        {% endif %}
+               			<span id="comment-like-count-{{ comment.uid }}">{{ comment.likes.count }} Likes</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </section>
+    </article>
+</main>
+
+<script>
+	function share(postURL) {
+		navigator.clipboard.writeText(postURL)
+        .then(() => alert('Link copied to clipboard!'))
+        .catch(error => console.error('Error:', error));
+	}
+
+	function repost(postFQID) {
+		var url = "/api/reposts/" + encodeURIComponent(postFQID);
+		fetch(url, {
+			method: 'POST',
+			headers: {
+				'X-CSRFToken': '{{ csrf_token }}',
+			},
+		})
+		.then(response => {
+			if (response.status === 201) {
+				alert('Reposted!');
+			} else if (response.status === 403) {
+				alert('Only public posts can be reposted.');
+			} else {
+				alert('Failed to repost.');
+			}
+		})
+		.catch(error => console.error('Error:', error));
+	}
+
+    function likePost(postId) {
+        fetch(`/api/authors/{{ post.author.uid }}/posts/${postId}/like/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ type: 'like' })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.message || `HTTP error! status: ${response.status}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            const likeCountSpan = document.getElementById('like-count');
+            if (data.likes_count) {
+                likeCountSpan.innerText = data.likes_count + " Likes";
+            } else if (data.message) {
+                alert(data.message); // Handle duplicate like message
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+            alert(error.message);
+        });
+    }
+
+    function likeComment(commentId) {
+        const authorUid = "{{ post.author.uid }}";
+
+        fetch(`/api/authors/${authorUid}/comments/${commentId}/like/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ type: 'like' })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.message || `HTTP error! status: ${response.status}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            const likeCountSpan = document.getElementById(`comment-like-count-${commentId}`);
+            if (data.likes_count) {
+                likeCountSpan.innerText = data.likes_count + " Likes";
+            } else if (data.message) {
+                alert(data.message); // Handle duplicate like message
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+            alert(error.message);
+        });
+    }
+
+    document.getElementById('comment-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const commentText = document.getElementById('comment-text').value;
+
+        fetch(`/api/authors/{{ post.author.uid }}/posts/{{ post.uid }}/comment/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ comment: commentText })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.json().then(err => {
+                    throw new Error(err.message || `HTTP error! status: ${response.status}`);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.comments_count) {
+                const newCommentId = data.comment_id;
+                const newComment = document.createElement('li');
+                newComment.id = `comment-${newCommentId}`;
+                newComment.innerHTML = `
+                    <p>{{ request.user.display_name }}: ${commentText}</p>
+                    <p>Just now</p>
+                    <button onclick="likeComment('${newCommentId}')">Like</button>
+                    <span id="comment-like-count-${newCommentId}">0 Likes</span>
+                `;
+                document.getElementById('comments-list').appendChild(newComment);
+                document.getElementById('comment-text').value = '';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+            alert(error.message);
+        });
+    });
+</script>
+{% endblock %}

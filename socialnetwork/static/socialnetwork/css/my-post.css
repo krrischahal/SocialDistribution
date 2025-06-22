@@ -1,0 +1,80 @@
+/* profile_posts.css */
+
+/* General Styling for the Post List */
+
+h2 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+ul {
+    list-style-type: none;
+    padding: 20px;
+    margin: 0;
+  }
+  
+  /* Styling Each Post */
+  li {
+    background-color: #ffffff; /* White background */
+    border: 1px solid #1e3a8a; /* Dark blue border */
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 6px rgba(30, 58, 138, 0.1); /* Blue shadow */
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  li:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(30, 58, 138, 0.15);
+  }
+  
+  /* Post Title Styling */
+  h3 a {
+    color: #1e3a8a; /* Dark blue */
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  
+  h3 a:hover {
+    color: #1a237e; /* Darker blue on hover */
+    text-decoration: underline;
+  }
+  
+  /* Markdown and Plaintext Post Styling */
+  .markdown_post,
+  .plaintext_post {
+    margin-top: 10px;
+    font-size: 1em;
+    color: #1e3a8a; /* Dark blue */
+    line-height: 1.5;
+  }
+  
+  /* Form Button Styling */
+  form {
+    display: inline-block;
+    margin-top: 10px;
+    margin-right: 5px;
+  }
+  
+  input[type="submit"] {
+    background-color: #1e3a8a; /* Dark blue */
+    color: #ffffff; /* White text */
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  input[type="submit"]:hover {
+    background-color: #1a237e; /* Darker blue */
+    transform: scale(1.05);
+  }
+  
+  /* CSRF Token */
+  input[name="csrfmiddlewaretoken"] {
+    display: none;
+  }
+  

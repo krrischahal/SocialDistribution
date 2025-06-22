@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Upload Image</h2>
+
+<form id="upload-form" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="image" required>
+    <button type="submit">Upload Image</button>
+</form>
+
+<div id="image-url" style="display:none;">
+    <p>Image URL: <input type="text" id="image-url-text" readonly style="width:100%;"></p>
+    <p>You can use this URL to include the image in your CommonMark post.</p>
+</div>
+
+<script>
+document.getElementById('upload-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var formData = new FormData(this);
+    fetch('', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+        },
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.image_url) {
+            document.getElementById('image-url-text').value = data.image_url;
+            document.getElementById('image-url').style.display = 'block';
+        } else if (data.error) {
+            alert(data.error);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+</script>
+{% endblock %}
